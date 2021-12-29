@@ -119,3 +119,7 @@ git是把代码从远程仓库克隆到本地的git仓库，然后从本地仓�
 1）首先在commit中复制hard版本号
 2）使用 git reset --hard 版本号
 3）使用 git push -f 强制提交
+
+### .gitignore文件
+
+1）用来制定不跟踪的文件或者文件夹。
