@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- 
+    1).git
+    当使用到git来管理代码时，会有一个.git文件称之为版本库
+    在mac上以 . 开头的文件是隐藏文件
+    mac上显示隐藏文件：defaults write com.apple.finder AppleShowAllFiles -boolean true ; killall Finder
+    git init 创建本地仓库
+    2)workspace
+    也就是我们本地项目存放文件的位置。
+    3）暂存区
+    就是暂时存放文件的地方，通过add命令将工作区文件保存到暂存区
+    git add 文件名(tab可以补齐)
+    git add . 把所有修改文件添加到暂存区
+    4）本地仓库
+    通过commit命令将暂存区文件添加到本地仓库
+    git commit 文件名 -m "提示信息"
+    git commit -m "提示信息" 把暂存区所有文件提交到本地仓库
+    5）远程仓库
+    比如github就是一个远程仓库
+    6）状态查询
+    查看文件状态 git status
+    查看日志 git log
+    查看历史操作记录 git reflog
+    7）git配置命令
+    git config -l 或者git config --list
+    git config --list 查看当前配置
+    git config --local --list 查看本地仓库配置
+    git config --global --list 查看全局配置
+    git config --system --list 查看系统配置
+    git config --global user.name "llshi"
+    git config --global user.email "email"
+    8）分支管理
+    查看本地分支 git branch
+    查看远程分支 git branch -r 
+    切换分支 git checkout 分支名
+    创建并切换到当前分支 git checkout -b 分支名
+    把当前分支跟其他分支合并 git merge 分支名
+    git merge 在分支进行合并的时候现有分支不会以任何形式被更改
+    git merge 可以远程分支跟本地分支直接进行合并
+    删除分支 git branch -d 分支名
+    重命名分支 git branch -m 旧名 新名
+    checkout 可以理解成从本地仓库拉取代码
+    9) 分支命名
+    master 主分支 用于部署生产环境的分支，确保稳定性
+    master分支一般由develop以及hotfix分支合并，任何情况下都不能直接修改代码
+    develop 开发分支，通常情况下保存最新完成以及bug修复后的代码
+    开发新功能时feature分支都是基于develop分支下创建
+    feature 开发新功能，基本上以develop分支为基础创建feature
+    分支命名 feature/功能 比如 feature/user_module  
+    release 预上线分支，发布提测阶段，会以release分支为基准
+    hotfix 或者 hotfix/名称 修复分支
+    线上出现紧急问题时需要及时修复时，以master为基准创建hotfix分支，修复完成后，修复完成后，需要合并
+    到master分支和develop分支
+    10）远程仓库
+    git remote add 主机名 url 链接本地仓库与远程仓库
+    git remote rename old new
+    git remote rm 主机名 删除远程主机
+    git push origin 本地分支名：远程分支名
+    git push -d 删除远程分支
+    11)fetch指令
+    git fetch 将远程仓库内容更新到本地仓库
+    git fetch origin远程主机名（拉取所有更新）
+    git getch origin master (拉取某个分支更新)
+    git fetch origin rname:lname 
+    12 git stash
+    git stash 用来缓存修改文件，使用场景需要切换分支的时候不用add commit分支切换回来的时候
+    可以使用git stash pop stash@{id}来恢复会删除stash记录
+    使用git stash apply 来恢复不会删除记录
+    git stash list 查看暂存文件
+    git stash clear 清空缓存
+    13）git rebase
+    作为git merge的替代方法
+    git rebase又叫做变基，优点线性结构
+    当多人开发的时候容易出现冲突
+    git status 查看有哪些文件冲突，然后逐个解决
+    打开冲突文件，找到冲突位置<<<<本地修改文件=====别人修改的文件>>>>>
+    首先删除冲突标记，然后查看是否有相同的代码，如果有相同的代码删除即可
+    git add . git commit -m "fix confict"
+    git rebase --continue
+    git rebase --continue 继续变基
+    如果还有冲突重复操作
+    完成冲突
+    
+    14）git clone
+    git clone 地址 从远程仓库克隆项目到本地仓库（就是把远程代码下载到本地仓库）
+    git cloen origin 本地目录名
+    15 git pull
+    16）git cherry-pick
+    选择合并一个或者多个commit，比如从A分支合并某个commit到B分支
+    使用场景：想合并一些内容到其他分支上，但是又不想合并整个分支
+    git log 获取commit-id
+    git log -p 打印会更清晰
+    切换到B分支 git checkout B
+    B分支下执行 git cherry-pick {commit-id}
+    然后git push 到远程仓库
+    17) git reset 
+    重置commit 每个分支都有一个head指针，并且head指向最新的commit
+    使用git log 或者 git log -p 可以查看commitid
+    git reset --hard commitid 会删除修改代码
+    然后远程回滚
+    git push origin HEAD -f
+    使用git reset之后会舍弃目标之后的版本
+    多人开发其他人也需要本地跟远程HEAD保持一致
+    git reset --hard origin master
+    18)多人操作流程
+    git add . 把修改文件提交到暂存区
+    git commit -m “{commit comment}” 把暂存区文件提交到本地仓库 
+    git pull -—rebase origin A 拉取远程仓库当前分支代码，防止push冲突
+    git push origin A 然后再提交本地仓库代码到远程仓库
+    19)小细节
+    执行git pull 命令的时候，如果本地有改动没有commit，就会提示错误 “error: Cannot pull with rebase: You have unstated changes.”
+    20)git tag
+    21)git revert
+    相比git reset git revert用于反做一个版本，不会删除之前版本
+    git revert {ccommitid} 撤销commtid的cmmit
+    git reset 重置到某个commit
+    使用场景：如果想撤销之前的某一版本，但是又想保留该版本后面的版本
+    22)git rebase
+    23）PR(pull request)参加开源项目
+    24）git fetch跟 git pull
+    git pull 作用是取回远程主机某个分支的更新再与本地分支进行合并(相当git fetch 再做git merge)
+    git pull --rebase origin rbranch:lbranch rebase模式可以避免自动生成merge commit记录
+    git fetch 是将远程仓库最新内容拉到本地仓库，通常用来查看其他人的进程。
+    25）远程分支与本地分支建立追踪关系，如果是git clone远程跟本地同名分支自动建立追踪关系
+    有了追踪关系可以直接 git pull origin 没有追踪关系需要 git pull origin rbranch
+    git push 不能像git pull一样省略分支名
+    git push origin branchname 如果没有追踪关系可能会创建新的分支
+    git push origin :rbranchname 表示删除远程branchname分支
+    如果有追踪关系git push origin
+    git push -u origin master 表示当前如果存在多个远程仓库，选定一个指定的仓库进行push
+    26)本地分支跟远程分支建立追踪关系
+    git branch --set-upstream lbranch origin/rbranch
+    27）只有分支合并的时候才会产生冲突
+    也就是git merge 合代码到公共分支上用git merge git merge master
+    git rebase 合并代码到个人分支上时用git rebase形成线性提交记录 gi rebase master
+    同分支文件先pull，再push不会产生冲突。
+   -->
+</body>
+</html>
